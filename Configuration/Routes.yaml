@@ -1,0 +1,7 @@
+- name: "MCP"
+  uriPattern: "mcp"
+  defaults:
+    "@package": "SJS.Flow.MCP"
+    "@controller": "MCP"
+    "@action": "mcp"
+  httpMethods: ["GET", "POST"]

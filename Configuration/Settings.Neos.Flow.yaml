@@ -1,0 +1,16 @@
+Neos:
+  Flow:
+    mvc:
+      routes:
+        SJS.Flow.MCP: true
+    security:
+      authentication:
+        providers:
+          "SJS.Flow.MCP:MCPController":
+            label: "MCP Controller"
+            provider: \SJS\Flow\MCP\Security\Authentication\Provider\MCPAuthenticationProvider
+            requestPatterns:
+              "SJS.Flow.MCP:MCPController":
+                pattern: "ControllerObjectName"
+                patternOptions:
+                  controllerObjectNamePattern: 'SJS\Flow\MCP\Controller\MCPController'

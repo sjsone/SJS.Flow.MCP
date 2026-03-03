@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace SJS\Flow\MCP\Domain\Server\Method\Resources\Templates\ListMethod;
+
+use Neos\Flow\Annotations as Flow;
+
+#[Flow\Proxy(false)]
+class Result implements \JsonSerializable
+{
+    public function __construct(
+        public readonly array $resourceTemplates,
+    ) {
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            "resourceTemplates" => $this->resourceTemplates,
+        ];
+    }
+}
