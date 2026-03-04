@@ -13,7 +13,7 @@ class CallRequest
     public const Method = "tools/call";
 
     /**
-     * @param array<mixed,mixed> $arguments
+     * @param array<string,mixed> $arguments
      */
     public function __construct(
         public readonly int $id,
@@ -44,6 +44,7 @@ class CallRequest
             throw new \InvalidArgumentException("request param 'arguments' must be an array");
         }
 
+        /** @var array<string,mixed> $paramArguments */
         return new self(
             $id,
             $name,

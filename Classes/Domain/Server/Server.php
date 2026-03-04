@@ -74,6 +74,7 @@ class Server
 
     protected function getRpcRequest(): JsonRPC\Request
     {
+        /** @var array<string,mixed> */
         $rpcRequestData = $this->request->getArguments();
 
         $rpcRequestJson = json_encode($rpcRequestData, JSON_PRETTY_PRINT);
@@ -189,7 +190,9 @@ class Server
                 continue;
             }
 
-            $content = $featureSet->toolsCall($toolsCallRequest->name, $toolsCallRequest->arguments);
+            $requestArguments = $toolsCallRequest->arguments;
+
+            $content = $featureSet->toolsCall($toolsCallRequest->name, $requestArguments);
             return Method\Tools\CallMethod::handle($toolsCallRequest, $content);
         }
 
