@@ -20,9 +20,24 @@ class ListRequest
 
     public static function fromJsonRPCRequest(Request $request): self
     {
+        $id = $request->id;
+        if ($id === null) {
+            throw new \InvalidArgumentException("id in request is null");
+        }
+
+        $params = $request->params;
+        if (!\is_array($params)) {
+            throw new \InvalidArgumentException("request params must an array");
+        }
+
+        $cursor = $params['cursor'] ?? null;
+        if (!\is_string($cursor)) {
+            throw new \InvalidArgumentException("request param 'cursor' must be string");
+        }
+
         return new self(
-            $request->id,
-            $request->params['cursor'] ?? null
+            $id,
+            $cursor
         );
     }
 }

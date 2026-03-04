@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 class ServerFactory
 {
     /**
-     * @var array<string, mixed>
+     * @var array<string,array<string,mixed>>
      */
     #[Flow\InjectConfiguration(path: 'server')]
     protected array $configuration;

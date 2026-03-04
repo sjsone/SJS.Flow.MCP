@@ -7,6 +7,7 @@ namespace SJS\Flow\MCP\Domain\MCP;
 use Neos\Flow\Mvc\ActionRequest;
 use SJS\Flow\MCP\Domain\MCP\Tool\Annotations;
 use SJS\Flow\MCP\JsonSchema\AbstractSchema;
+use SJS\Flow\MCP\Domain\MCP\Tool\Content as ToolContent;
 
 abstract class Tool implements \JsonSerializable
 {
@@ -41,7 +42,7 @@ abstract class Tool implements \JsonSerializable
     /**
      * @param array<string,mixed> $input
      */
-    abstract public function run(ActionRequest $actionRequest, array $input): mixed;
+    abstract public function run(ActionRequest $actionRequest, array $input): ToolContent;
 
     public function jsonSerialize(): mixed
     {

@@ -20,9 +20,24 @@ class ReadRequest
 
     public static function fromJsonRPCRequest(Request $request): self
     {
+        $id = $request->id;
+        if ($id === null) {
+            throw new \InvalidArgumentException("id in request is null");
+        }
+
+        $params = $request->params;
+        if (!\is_array($params)) {
+            throw new \InvalidArgumentException("request params must an array");
+        }
+
+        $uri = $params['uri'] ?? null;
+        if (!\is_string($uri)) {
+            throw new \InvalidArgumentException("request param 'uri' must be a string");
+        }
+
         return new self(
-            $request->id,
-            $request->params['uri']
+            $id,
+            $uri
         );
     }
 }

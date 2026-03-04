@@ -66,12 +66,13 @@ class Resource implements \JsonSerializable
     public static function createBlobResource(
         string $uri,
         string $name,
+        string $data,
         ?string $title = null,
         ?string $description = null,
         ?string $mimeType = null,
         ?int $size = null,
-        mixed $data = null,
     ): self {
+        $blob = base64_encode($data);
         return new self(
             uri: $uri,
             name: $name,
@@ -79,7 +80,7 @@ class Resource implements \JsonSerializable
             description: $description,
             mimeType: $mimeType,
             size: $size,
-            blob: base64_encode($data),
+            blob: $blob,
         );
     }
 

@@ -13,7 +13,7 @@ class CallRequest
     public const Method = "tools/call";
 
     /**
-     * @param array<string,mixed> $arguments
+     * @param array<mixed,mixed> $arguments
      */
     public function __construct(
         public readonly int $id,
@@ -24,10 +24,30 @@ class CallRequest
 
     public static function fromJsonRPCRequest(Request $request): self
     {
+        $id = $request->id;
+        if ($id === null) {
+            throw new \InvalidArgumentException("id in request is null");
+        }
+
+        $params = $request->params;
+        if (!\is_array($params)) {
+            throw new \InvalidArgumentException("request params must be an array");
+        }
+
+        $name = $params['name'] ?? null;
+        if (!\is_string($name)) {
+            throw new \InvalidArgumentException("request param 'arguments' must be a string");
+        }
+
+        $paramArguments = $params['arguments'] ?? null;
+        if (!\is_array($paramArguments)) {
+            throw new \InvalidArgumentException("request param 'arguments' must be an array");
+        }
+
         return new self(
-            $request->id,
-            $request->params['name'],
-            $request->params['arguments'],
+            $id,
+            $name,
+            $paramArguments,
         );
     }
 }

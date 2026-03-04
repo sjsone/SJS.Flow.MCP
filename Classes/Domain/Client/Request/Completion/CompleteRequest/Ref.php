@@ -17,13 +17,23 @@ class Ref
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<mixed,mixed> $data
      */
     public static function fromArray(array $data): self
     {
+        $type = $data['type'] ?? null;
+        if (!\is_string($type)) {
+            throw new \InvalidArgumentException("'type' must be set and a string");
+        }
+
+        $uri = $data['uri'] ?? null;
+        if (!\is_string($uri)) {
+            throw new \InvalidArgumentException("'uri' must be set and a string");
+        }
+
         return new self(
-            $data['type'],
-            $data['uri'],
+            $type,
+            $uri,
         );
     }
 }

@@ -19,8 +19,13 @@ class ListRequest
 
     public static function fromJsonRPCRequest(Request $request): self
     {
+        $id = $request->id;
+        if ($id === null) {
+            throw new \InvalidArgumentException("id in request is null");
+        }
+
         return new self(
-            $request->id
+            $id
         );
     }
 }

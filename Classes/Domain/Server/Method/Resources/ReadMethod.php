@@ -13,7 +13,7 @@ use SJS\Flow\MCP\Transport\JsonRPC\Response;
 class ReadMethod
 {
     /**
-     * @param array<mixed> $resources
+     * @param array<\SJS\Flow\MCP\Domain\MCP\Resource> $resources
      */
     public static function handle(Resources\ReadRequest $resourcesListRequest, array $resources): string
     {

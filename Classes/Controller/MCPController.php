@@ -30,6 +30,9 @@ class MCPController extends ActionController
         $this->response->setHttpHeader("Content-Type", "application/json");
 
         $server = $this->buildServerFromRequest();
+        if ($server === null) {
+            throw new \Exception("Could not build server from request");
+        }
 
         $response = $server->handleRequest();
 

@@ -32,13 +32,16 @@ class MCPAuthenticationProvider extends AbstractProvider implements Authenticati
     public function authenticate(TokenInterface $authenticationToken)
     {
 
-
-        $token = $authenticationToken->getCredentials()["bearer"] ?? null;
-        if ($token === null) {
-            $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
+        $credentials = $authenticationToken->getCredentials();
+        if (!\is_array($credentials) || !isset($credentials["bearer"])) {
             return;
         }
 
+        $token = $credentials["bearer"] ?? null;
+        if ($token === null || !is_string($token)) {
+            $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
+            return;
+        }
 
         $agent = $this->agentProvider->getAgentByToken($token);
         if ($agent === null) {

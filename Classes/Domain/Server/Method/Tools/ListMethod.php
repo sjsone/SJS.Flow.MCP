@@ -13,7 +13,7 @@ use SJS\Flow\MCP\Transport\JsonRPC\Response;
 class ListMethod
 {
     /**
-     * @param array<mixed> $tools
+     * @param array<\SJS\Flow\MCP\Domain\MCP\Tool> $tools
      */
     public static function handle(Tools\ListRequest $toolsListRequest, array $tools, ?string $nextCursor): string
     {

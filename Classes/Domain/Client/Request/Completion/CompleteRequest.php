@@ -23,10 +23,30 @@ class CompleteRequest
 
     public static function fromJsonRPCRequest(Request $request): self
     {
+        $id = $request->id;
+        if ($id === null) {
+            throw new \InvalidArgumentException("id in request is null");
+        }
+
+        $params = $request->params;
+        if (!\is_array($params)) {
+            throw new \InvalidArgumentException("request params must an array");
+        }
+
+        $argument = $params['argument'] ?? null;
+        if (!\is_array($argument)) {
+            throw new \InvalidArgumentException("request param 'argument' must be an array");
+        }
+
+        $ref = $params['ref'] ?? null;
+        if (!\is_array($ref)) {
+            throw new \InvalidArgumentException("request param 'ref' must be an array");
+        }
+
         return new self(
-            $request->id,
-            Argument::fromArray($request->params['argument']),
-            Ref::fromArray($request->params['ref']),
+            $id,
+            Argument::fromArray($argument),
+            Ref::fromArray($ref),
         );
     }
 }

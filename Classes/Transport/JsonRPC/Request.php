@@ -23,10 +23,22 @@ class Request
     {
         self::assertRequestData($data);
 
+        $id = $data['id'] ?? null;
+        if (!\is_int($id)) {
+            throw new \InvalidArgumentException("id must be int");
+        }
+
+        $method = $data['method'];
+        if (!\is_string($method)) {
+            throw new \InvalidArgumentException("method must be a string");
+        }
+
+        $params = $data['params'] ?? null;
+
         return new self(
-            $data['id'] ?? null,
-            $data['method'],
-            $data['params'] ?? null,
+            $id,
+            $method,
+            $params,
         );
     }
 

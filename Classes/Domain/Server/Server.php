@@ -41,8 +41,16 @@ class Server
     protected function initializeFeatureSets(): void
     {
         $featureSetsConfiguration = $this->configuration['featureSets'] ?? [];
+        if (!\is_array($featureSetsConfiguration)) {
+            throw new \Exception("'featureSets' in configuration must be an array");
+        }
 
         foreach ($featureSetsConfiguration as $featureSetName => $featureSetClass) {
+            if (!\is_string($featureSetClass)) {
+                throw new \Exception("value of featureSet configuration must be a string");
+
+            }
+
             $featureSet = $this->objectManager->get($featureSetClass);
 
             if (!($featureSet instanceof FeatureSetInterface)) {
@@ -98,7 +106,13 @@ class Server
     protected function handleCaughtThrowable(\Throwable $throwable, JsonRPC\Request $rpcRequest): string
     {
         $this->logger->critical("Caught error: " . $throwable->getMessage());
-        $response = (new Response($rpcRequest->id))->error($throwable->getMessage(), ErrorCode::INTERNAL_ERROR);
+
+        $id = $rpcRequest->id;
+        if ($id === null) {
+            throw new \InvalidArgumentException("id in request is null");
+        }
+
+        $response = (new Response($id))->error($throwable->getMessage(), ErrorCode::INTERNAL_ERROR);
         return $response;
     }
 
