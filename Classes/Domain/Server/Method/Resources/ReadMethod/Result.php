@@ -18,6 +18,9 @@ class Result implements \JsonSerializable
     ) {
     }
 
+    /**
+     * @return array{contents: Resource[]}
+     */
     public function jsonSerialize(): array
     {
         return [

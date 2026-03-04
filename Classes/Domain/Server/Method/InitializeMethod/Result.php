@@ -9,6 +9,9 @@ use Neos\Flow\Annotations as Flow;
 #[Flow\Proxy(false)]
 class Result implements \JsonSerializable
 {
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
 

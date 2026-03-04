@@ -13,8 +13,8 @@ use SJS\Flow\MCP\Domain\MCP\Completion;
 interface FeatureSetInterface
 {
 
-    public function setActionRequest(ActionRequest $request);
-    public function initialize();
+    public function setActionRequest(ActionRequest $request): void;
+    public function initialize(): void;
 
     /**
      * @param null|string $cursor
@@ -31,9 +31,7 @@ interface FeatureSetInterface
     public function hasTool(string $toolName): bool;
 
     /**
-     * @param string $toolName
-     * @param array $arguments
-     * @return void
+     * @param array<string,mixed> $arguments
      */
     public function toolsCall(string $toolName, array $arguments): Content;
 
@@ -42,6 +40,9 @@ interface FeatureSetInterface
      */
     public function resourcesRead(string $uri): array;
 
+    /**
+     * @return array<mixed>
+     */
     public function resourcesTemplatesList(): array;
 
     public function completionComplete(Argument $argument, Ref $ref): ?Completion;

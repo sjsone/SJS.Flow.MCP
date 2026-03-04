@@ -12,6 +12,9 @@ use Psr\Log\LoggerInterface;
 #[Flow\Scope('singleton')]
 class ServerFactory
 {
+    /**
+     * @var array<string, mixed>
+     */
     #[Flow\InjectConfiguration(path: 'server')]
     protected array $configuration;
 

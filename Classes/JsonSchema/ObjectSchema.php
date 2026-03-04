@@ -30,6 +30,9 @@ class ObjectSchema extends AbstractSchema
         }
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = [

@@ -12,6 +12,9 @@ use SJS\Flow\MCP\Transport\JsonRPC\Response;
 #[Flow\Proxy(false)]
 class ListMethod
 {
+    /**
+     * @param array<mixed> $templates
+     */
     public static function handle(Resources\Templates\ListRequest $resourcesTemplatesListRequest, array $templates): string
     {
         $response = new Response($resourcesTemplatesListRequest->id);

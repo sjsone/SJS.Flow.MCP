@@ -9,6 +9,9 @@ use Neos\Flow\Annotations as Flow;
 #[Flow\Proxy(false)]
 class Completion implements \JsonSerializable
 {
+    /**
+     * @param array<mixed> $values
+     */
     public function __construct(
         public readonly array $values,
         public readonly int $total,
@@ -16,6 +19,9 @@ class Completion implements \JsonSerializable
     ) {
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

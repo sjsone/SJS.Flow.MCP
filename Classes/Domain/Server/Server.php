@@ -25,6 +25,9 @@ class Server
      */
     protected array $featureSets = [];
 
+    /**
+     * @param array<string,mixed> $configuration
+     */
     public function __construct(
         public readonly string $name,
         public readonly array $configuration,
@@ -35,7 +38,7 @@ class Server
         $this->initializeFeatureSets();
     }
 
-    protected function initializeFeatureSets()
+    protected function initializeFeatureSets(): void
     {
         $featureSetsConfiguration = $this->configuration['featureSets'] ?? [];
 
@@ -51,7 +54,7 @@ class Server
         }
     }
 
-    public function handleRequest()
+    public function handleRequest(): string
     {
         $rpcRequest = $this->getRpcRequest();
         try {
@@ -99,12 +102,12 @@ class Server
         return $response;
     }
 
-    protected function handleInitialize(Request\InitializeRequest $initializeRequest)
+    protected function handleInitialize(Request\InitializeRequest $initializeRequest): string
     {
         return Method\InitializeMethod::handle($initializeRequest);
     }
 
-    protected function handleResourcesList(Request\Resources\ListRequest $resourcesListRequest)
+    protected function handleResourcesList(Request\Resources\ListRequest $resourcesListRequest): string
     {
         $resources = [];
 
@@ -115,7 +118,7 @@ class Server
         return Method\Resources\ListMethod::handle($resourcesListRequest, $resources, null);
     }
 
-    protected function handleResourcesTemplatesList(Request\Resources\Templates\ListRequest $resourcesTemplatesListRequest)
+    protected function handleResourcesTemplatesList(Request\Resources\Templates\ListRequest $resourcesTemplatesListRequest): string
     {
         $templates = [];
 
@@ -126,7 +129,7 @@ class Server
         return Method\Resources\Templates\ListMethod::handle($resourcesTemplatesListRequest, $templates);
     }
 
-    protected function handleCompletionComplete(Request\Completion\CompleteRequest $completionCompleteRequest)
+    protected function handleCompletionComplete(Request\Completion\CompleteRequest $completionCompleteRequest): string
     {
         $completion = new Completion(
             [],

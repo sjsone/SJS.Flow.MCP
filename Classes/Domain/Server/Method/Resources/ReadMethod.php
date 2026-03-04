@@ -12,6 +12,9 @@ use SJS\Flow\MCP\Transport\JsonRPC\Response;
 #[Flow\Proxy(false)]
 class ReadMethod
 {
+    /**
+     * @param array<mixed> $resources
+     */
     public static function handle(Resources\ReadRequest $resourcesListRequest, array $resources): string
     {
         $response = new Response($resourcesListRequest->id);

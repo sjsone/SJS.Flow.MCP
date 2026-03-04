@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace SJS\Flow\MCP\Controller;
 
 use Neos\Flow\Mvc\Controller\ActionController;
-use Neos\Flow\Annotations as Flow;
-use SJS\Flow\MCP\Domain\MCP\Tool\Content;
 use SJS\Flow\MCP\Domain\Server\Server;
 use SJS\Flow\MCP\Domain\Server\ServerFactory;
-use SJS\Flow\MCP\Transport\JsonRPC\Response;
+use Neos\Flow\Annotations as Flow;
 
 class MCPController extends ActionController
 {
     #[Flow\Inject()]
     protected ServerFactory $serverFactory;
 
+    /**
+     * @var array<string>
+     */
     protected $supportedMediaTypes = [
         'application/json',
         // 'text/event-stream',
@@ -24,7 +25,7 @@ class MCPController extends ActionController
     /**
      * @Flow\SkipCsrfProtection
      */
-    public function mcpAction()
+    public function mcpAction(): string
     {
         $this->response->setHttpHeader("Content-Type", "application/json");
 

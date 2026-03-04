@@ -16,6 +16,9 @@ class ArraySchema extends AbstractSchema
         parent::__construct($description, $default);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = parent::jsonSerialize();

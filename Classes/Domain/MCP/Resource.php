@@ -83,6 +83,9 @@ class Resource implements \JsonSerializable
         );
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = [

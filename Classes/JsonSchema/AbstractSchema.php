@@ -17,7 +17,7 @@ abstract class AbstractSchema implements SchemaComponent
         $this->default = $default;
     }
 
-    public function required()
+    public function required(): static
     {
         $this->requiredInObject = true;
         return $this;
@@ -28,6 +28,9 @@ abstract class AbstractSchema implements SchemaComponent
         return $this->requiredInObject;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = ['type' => $this->type];

@@ -9,12 +9,18 @@ use Neos\Flow\Annotations as Flow;
 #[Flow\Proxy(false)]
 class Result implements \JsonSerializable
 {
+    /**
+     * @param array<mixed> $resources
+     */
     public function __construct(
         public readonly array $resources,
         public readonly ?string $nextCursor,
     ) {
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = [

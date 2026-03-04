@@ -19,6 +19,9 @@ class ResourceContent
     ) {
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize()
     {
         return [

@@ -15,6 +15,9 @@ class Result implements \JsonSerializable
     ) {
     }
 
+    /**
+     * @return array{completion: Completion}
+     */
     public function jsonSerialize(): array
     {
         return [

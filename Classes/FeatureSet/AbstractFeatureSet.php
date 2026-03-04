@@ -52,7 +52,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         $this->tools[$toolInstance->nameWithPrefix()] = $toolInstance;
     }
 
-    public function setActionRequest(ActionRequest $actionRequest)
+    public function setActionRequest(ActionRequest $actionRequest): void
     {
         $this->actionRequest = $actionRequest;
     }
@@ -67,6 +67,9 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         return [];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function resourcesTemplatesList(): array
     {
         return [];
@@ -96,7 +99,9 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         return \array_key_exists($toolName, $this->tools);
     }
 
-
+    /**
+     * @param array<string,mixed> $arguments
+     */
     public function toolsCall(string $toolName, array $arguments): Content
     {
         if (!\array_key_exists($toolName, $this->tools)) {
@@ -116,7 +121,10 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         }
     }
 
-    protected function validatedArgumentsForTool(Tool $tool, array $arguments)
+    /**
+     * @param array<string,mixed> $arguments
+     */
+    protected function validatedArgumentsForTool(Tool $tool, array $arguments): void
     {
         if ($tool->inputSchema instanceof ObjectSchema) {
             $requiredKeys = array_keys($tool->inputSchema->getRequiredProperties());
@@ -144,7 +152,10 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
             $featureSetName = str_replace("FeatureSet", "", end($fqcnParts));
 
             $featureSetNameParts = preg_split('/(?=[A-Z])/', $featureSetName);
-            $featureSetNameParts = array_filter($featureSetNameParts, fn($p) => $p);
+            if ($featureSetNameParts === false) {
+                throw new \Exception("Could not generate tool call prefix.\nUnable to split featureSetName.");
+            }
+            $featureSetNameParts = array_filter($featureSetNameParts, fn($p) => !empty($p));
             $featureSetNameParts = array_map(fn($p) => strtolower($p), $featureSetNameParts);
 
             $this->toolCallPrefix = implode("_", $featureSetNameParts);

@@ -12,6 +12,9 @@ class CallRequest
 {
     public const Method = "tools/call";
 
+    /**
+     * @param array<string,mixed> $arguments
+     */
     public function __construct(
         public readonly int $id,
         public readonly string $name,

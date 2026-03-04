@@ -20,7 +20,11 @@ class MCPAuthenticationProvider extends AbstractProvider implements Authenticati
     #[Flow\Inject]
     protected AgentProviderInterface $agentProvider;
 
-    public function getTokenClassNames()
+
+    /**
+     * @return array<class-string>
+     */
+    public function getTokenClassNames(): array
     {
         return [MCPToken::class];
     }

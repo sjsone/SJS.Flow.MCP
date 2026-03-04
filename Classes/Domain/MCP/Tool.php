@@ -29,12 +29,19 @@ abstract class Tool implements \JsonSerializable
     ) {
     }
 
-    public function initializeInput(mixed $input)
+    /**
+     * @param array<string,mixed> $input
+     * @return array<string,mixed>
+     */
+    public function initializeInput(mixed $input): array
     {
         return $input;
     }
 
-    abstract public function run(ActionRequest $actionRequest, array $input);
+    /**
+     * @param array<string,mixed> $input
+     */
+    abstract public function run(ActionRequest $actionRequest, array $input): mixed;
 
     public function jsonSerialize(): mixed
     {

@@ -39,16 +39,22 @@ class Response
 
     public function result(\JsonSerializable $data): string
     {
-        return json_encode([
+        $result = json_encode([
             "jsonrpc" => "2.0",
             "id" => $this->id,
             "result" => $data
         ]);
+
+        if ($result === false) {
+            throw new \InvalidArgumentException("Result data is not json encodable");
+        }
+
+        return $result;
     }
 
     public function error(string $message, ErrorCode $code): string
     {
-        return json_encode([
+        $error = json_encode([
             "jsonrpc" => "2.0",
             "id" => $this->id,
             "error" => [
@@ -56,5 +62,11 @@ class Response
                 "message" => $message
             ]
         ]);
+
+        if ($error === false) {
+            throw new \InvalidArgumentException("Result data is not json encodable");
+        }
+
+        return $error;
     }
 }

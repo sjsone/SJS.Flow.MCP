@@ -16,6 +16,9 @@ class Request
     ) {
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     public static function fromArray(array $data): self
     {
         self::assertRequestData($data);
@@ -27,7 +30,10 @@ class Request
         );
     }
 
-    protected static function assertRequestData(array $data, bool $withId = false)
+    /**
+     * @param array<string,mixed> $data
+     */
+    protected static function assertRequestData(array $data, bool $withId = false): void
     {
         $jsonRpc = $data['jsonrpc'] ?? null;
         if ($jsonRpc === null) {

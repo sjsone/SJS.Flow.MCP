@@ -17,7 +17,7 @@ class MCPToken extends AbstractToken implements TokenInterface
 {
 
     /**
-     * @var array
+     * @var array{bearer: string}
      */
     #[Flow\Transient]
     protected $credentials = ['bearer' => ''];

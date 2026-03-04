@@ -8,6 +8,9 @@ class StringSchema extends AbstractSchema
 {
     protected string $type = 'string';
 
+    /**
+     * @param array<mixed> $enum
+     */
     public function __construct(
         ?string $description = null,
         mixed $default = null,
@@ -20,6 +23,9 @@ class StringSchema extends AbstractSchema
         parent::__construct($description, $default);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = parent::jsonSerialize();
