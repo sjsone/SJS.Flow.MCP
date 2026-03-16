@@ -30,7 +30,7 @@ class ListRequest
             throw new \InvalidArgumentException("request params must an array");
         }
 
-        $cursor = $params['cursor'] ?? null;
+        $cursor = $params['cursor'] ?? "nonce";
         if (!\is_string($cursor)) {
             throw new \InvalidArgumentException("request param 'cursor' must be string");
         }
