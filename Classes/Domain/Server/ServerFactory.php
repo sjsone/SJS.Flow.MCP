@@ -8,6 +8,7 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Psr\Log\LoggerInterface;
+use SJS\Flow\MCP\Domain\Server\Server;
 
 #[Flow\Scope('singleton')]
 class ServerFactory
@@ -28,7 +29,7 @@ class ServerFactory
     {
         return new Server(
             $name,
-            $this->configuration[$name],
+            Server\Configuration::fromArray($this->configuration[$name]),
             $actionRequest,
             $this->objectManager,
             $this->logger

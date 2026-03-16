@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use SJS\Flow\MCP\Domain\Client\Request;
 use SJS\Flow\MCP\Domain\MCP\Completion;
 use SJS\Flow\MCP\Domain\Server\Method;
+use SJS\Flow\MCP\Domain\Server\Server\Configuration;
 use SJS\Flow\MCP\FeatureSet\FeatureSetInterface;
 use SJS\Flow\MCP\Transport\JsonRPC;
 use SJS\Flow\MCP\Transport\JsonRPC\ErrorCode;
@@ -25,12 +26,9 @@ class Server
      */
     protected array $featureSets = [];
 
-    /**
-     * @param array<string,mixed> $configuration
-     */
     public function __construct(
         public readonly string $name,
-        public readonly array $configuration,
+        public readonly Configuration $configuration,
         public readonly ActionRequest $request,
         protected ObjectManager $objectManager,
         protected LoggerInterface $logger,
@@ -40,25 +38,19 @@ class Server
 
     protected function initializeFeatureSets(): void
     {
-        $featureSetsConfiguration = $this->configuration['featureSets'] ?? [];
-        if (!\is_array($featureSetsConfiguration)) {
-            throw new \Exception("'featureSets' in configuration must be an array");
-        }
+        $featureSetsConfiguration = $this->configuration->featureSets;
 
-        foreach ($featureSetsConfiguration as $featureSetName => $featureSetClass) {
-            if (!\is_string($featureSetClass)) {
-                throw new \Exception("value of featureSet configuration must be a string");
-
-            }
-
-            $featureSet = $this->objectManager->get($featureSetClass);
-
+        foreach ($featureSetsConfiguration as $featureSetConfiguration) {
+            // TODO: create FeatureSetFactory(+interface) which does all this configuration-to-instance stuff
+            $featureSet = $this->objectManager->get($featureSetConfiguration->implementation);
             if (!($featureSet instanceof FeatureSetInterface)) {
+                // TODO: implement logging / warning / error
                 continue;
             }
             $featureSet->setActionRequest($this->request);
+            $featureSet->setOptions($featureSetConfiguration->options);
             $featureSet->initialize();
-            $this->featureSets[$featureSetName] = $featureSet;
+            $this->featureSets[$featureSetConfiguration->name] = $featureSet;
         }
     }
 
