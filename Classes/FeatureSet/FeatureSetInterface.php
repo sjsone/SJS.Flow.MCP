@@ -14,6 +14,12 @@ interface FeatureSetInterface
 {
 
     public function setActionRequest(ActionRequest $request): void;
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function setOptions(array $options): void;
+
     public function initialize(): void;
 
     /**
@@ -21,7 +27,6 @@ interface FeatureSetInterface
      * @return array<\SJS\Flow\MCP\Domain\MCP\Resource>
      */
     public function resourcesList(?string $cursor = null): array;
-
 
     /**
      * @return array<\SJS\Flow\MCP\Domain\MCP\Tool>

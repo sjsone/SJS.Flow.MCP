@@ -15,7 +15,7 @@ use SJS\Flow\MCP\Domain\MCP\Tool;
 use SJS\Flow\MCP\Domain\MCP\Tool\Content;
 use SJS\Flow\MCP\JsonSchema\ObjectSchema;
 
-#[Flow\Scope("singleton")]
+#[Flow\Scope("prototype")]
 abstract class AbstractFeatureSet implements FeatureSetInterface
 {
     #[Flow\Inject(lazy: false)]
@@ -29,6 +29,11 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     protected ?string $toolCallPrefix = null;
 
     protected bool $useToolCallPrefix = true;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $options = [];
 
     /**
      * @var array<\SJS\Flow\MCP\Domain\MCP\Tool>
@@ -55,6 +60,14 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     public function setActionRequest(ActionRequest $actionRequest): void
     {
         $this->actionRequest = $actionRequest;
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function setOptions(array $options): void
+    {
+        $this->options = $options;
     }
 
     abstract public function initialize(): void;
