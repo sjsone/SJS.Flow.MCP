@@ -25,14 +25,14 @@ class ListRequest
             throw new \InvalidArgumentException("id in request is null");
         }
 
-        $params = $request->params;
+        $params = $request->params ?? [];
         if (!\is_array($params)) {
             throw new \InvalidArgumentException("request params must an array");
         }
 
         $cursor = $params['cursor'] ?? null;
-        if (!\is_string($cursor)) {
-            throw new \InvalidArgumentException("request param 'cursor' must be string");
+        if ($cursor !== null && !\is_string($cursor)) {
+            throw new \InvalidArgumentException("request param 'cursor' must be string, was: " . gettype($cursor));
         }
 
         return new self(

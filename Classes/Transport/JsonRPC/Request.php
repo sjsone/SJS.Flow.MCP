@@ -24,7 +24,7 @@ class Request
         self::assertRequestData($data);
 
         $id = $data['id'] ?? null;
-        if (!\is_int($id)) {
+        if ($id !== null && !\is_int($id)) {
             throw new \InvalidArgumentException("id must be int");
         }
 
