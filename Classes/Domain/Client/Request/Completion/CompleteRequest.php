@@ -28,7 +28,7 @@ class CompleteRequest
             throw new \InvalidArgumentException("id in request is null");
         }
 
-        $params = $request->params;
+        $params = $request->params ?? [];
         if (!\is_array($params)) {
             throw new \InvalidArgumentException("request params must an array");
         }
