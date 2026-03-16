@@ -32,8 +32,12 @@ class Configuration
 
         $featureSets = [];
         foreach ($featureSetsConfiguration as $name => $configuration) {
-            if (!\is_string($name) || !\is_array($configuration)) {
+            if (!\is_string($name)) {
                 throw new \InvalidArgumentException("featureSets has to be an associative array.");
+            }
+            if (!\is_array($configuration) && !\is_string($configuration)) {
+                throw new \InvalidArgumentException("featureSets values have to be either a FQCN or an configuration object.");
+
             }
             /** @var array<string, mixed> $configuration */
             $featureSets[$name] = FeatureSetConfiguration::fromNameAndMixed($name, $configuration);
