@@ -1,6 +1,7 @@
 - name: "MCP"
   uriPattern: "mcp"
   defaults:
+    # TODO: Add default server value which the ServerFactory can use to decide what server to create for this request
     "@package": "SJS.Flow.MCP"
     "@controller": "MCP"
     "@action": "mcp"
