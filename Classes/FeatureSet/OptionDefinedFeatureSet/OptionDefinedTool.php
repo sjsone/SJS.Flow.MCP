@@ -45,7 +45,7 @@ class OptionDefinedTool extends Tool
         /** @var null|string|array<string,mixed> */
         $result = $instance->$method($actionRequest, $input);
 
-        if (\is_array($result) && \array_is_list($result)) {
+        if (\is_array($result)) {
             return Tool\Content::structuredWithFallback($result);
         }
 
