@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace SJS\Flow\MCP\FeatureSet;
 
-use Neos\Flow\Annotations as Flow;
 use SJS\Flow\MCP\FeatureSet\AbstractFeatureSet;
 use SJS\Flow\MCP\FeatureSet\OptionDefinedFeatureSet\OptionDefinedTool;
 
-#[Flow\Scope("singleton")]
 class OptionDefinedFeatureSet extends AbstractFeatureSet
 {
     public function initialize(): void

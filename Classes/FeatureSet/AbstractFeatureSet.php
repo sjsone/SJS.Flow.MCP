@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace SJS\Flow\MCP\FeatureSet;
 
-use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Psr\Log\LoggerInterface;
 use SJS\Flow\MCP\Domain\Client\Request\Completion\CompleteRequest\Argument;
 use SJS\Flow\MCP\Domain\Client\Request\Completion\CompleteRequest\Ref;
 use Neos\Flow\Annotations as Flow;
+use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Completion;
 use SJS\Flow\MCP\Domain\MCP\Tool;
 use SJS\Flow\MCP\Domain\MCP\Tool\Content;
@@ -24,7 +24,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     #[Flow\Inject]
     protected LoggerInterface $logger;
 
-    protected ActionRequest $actionRequest;
+    protected ServerContext $serverContext;
 
     protected ?string $toolCallPrefix = null;
 
@@ -57,9 +57,9 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         $this->tools[$toolInstance->nameWithPrefix()] = $toolInstance;
     }
 
-    public function setActionRequest(ActionRequest $actionRequest): void
+    public function setServerContext(ServerContext $serverContext): void
     {
-        $this->actionRequest = $actionRequest;
+        $this->serverContext = $serverContext;
     }
 
     /**
@@ -98,7 +98,6 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
      */
     public function resourcesRead(string $uri): array
     {
-        // TODO: create resource providing with scheme registration and automatic checks etc.  
         return [];
     }
 
@@ -128,7 +127,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
                 tool: $tool,
                 arguments: $arguments,
             );
-            return $tool->run($this->actionRequest, $arguments);
+            return $tool->run($this->serverContext, $arguments);
         } catch (\InvalidArgumentException $e) {
             return Content::text($e->getMessage());
         }
@@ -150,6 +149,19 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
                     throw new \InvalidArgumentException("Required argument is null: '$requiredKey'");
                 }
             }
+        }
+    }
+
+    /**
+     * Execute a closure and catch Content Repository exceptions, returning their
+     * message as a text Content. Use in FeatureSets that wrap CR operations.
+     */
+    protected function catchCRExceptions(\Closure $fn): Content
+    {
+        try {
+            return $fn();
+        } catch (\Neos\ContentRepository\Core\SharedModel\Exception $e) {
+            return Content::text($e->getMessage());
         }
     }
 

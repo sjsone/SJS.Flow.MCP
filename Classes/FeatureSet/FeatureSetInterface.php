@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SJS\Flow\MCP\FeatureSet;
 
-use Neos\Flow\Mvc\ActionRequest;
+use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Tool\Content;
 use SJS\Flow\MCP\Domain\Client\Request\Completion\CompleteRequest\Argument;
 use SJS\Flow\MCP\Domain\Client\Request\Completion\CompleteRequest\Ref;
@@ -13,7 +13,7 @@ use SJS\Flow\MCP\Domain\MCP\Completion;
 interface FeatureSetInterface
 {
 
-    public function setActionRequest(ActionRequest $request): void;
+    public function setServerContext(ServerContext $context): void;
 
     /**
      * @param array<string, mixed> $options

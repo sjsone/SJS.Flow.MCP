@@ -6,8 +6,11 @@ namespace SJS\Flow\MCP\Domain\Server;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
+use Neos\Flow\Mvc\Exception\NoSuchArgumentException;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Psr\Log\LoggerInterface;
+use SJS\Flow\MCP\Domain\Connection\ConnectionProviderInterface;
+use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\Server\Server;
 
 #[Flow\Scope('singleton')]
@@ -23,6 +26,9 @@ class ServerFactory
     protected ObjectManager $objectManager;
 
     #[Flow\Inject]
+    protected ConnectionProviderInterface $connectionProvider;
+
+    #[Flow\Inject]
     protected LoggerInterface $logger;
 
     public function buildFromActionRequest(ActionRequest $actionRequest): ?Server
@@ -33,10 +39,16 @@ class ServerFactory
             throw new \InvalidArgumentException("provided server does not exist");
         }
 
+        $connection = $this->connectionProvider->getConnectionByTokenAndServerName(
+            $this->extractTokenFromActionRequest($actionRequest),
+            $name
+        );
+        $serverContext = new ServerContext(connection: $connection, request: $actionRequest);
+
         return new Server(
             $name,
             Server\Configuration::fromArray($this->configuration[$name]),
-            $actionRequest,
+            $serverContext,
             $this->objectManager,
             $this->logger
         );
@@ -60,5 +72,19 @@ class ServerFactory
         }
 
         return $serverName;
+    }
+
+    protected function extractTokenFromActionRequest(ActionRequest $actionRequest): string
+    {
+        $httpRequest = $actionRequest->getHttpRequest();
+        $authHeader = $httpRequest->getHeader('Authorization');
+        if (empty($authHeader)) {
+            return '';
+        }
+        $authHeader = $authHeader[0];
+        if (str_starts_with($authHeader, 'Bearer ')) {
+            return substr($authHeader, 7);
+        }
+        return '';
     }
 }

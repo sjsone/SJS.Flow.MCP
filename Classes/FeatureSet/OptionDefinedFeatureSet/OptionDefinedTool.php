@@ -6,7 +6,7 @@ namespace SJS\Flow\MCP\FeatureSet\OptionDefinedFeatureSet;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ObjectManagement\ObjectManager;
-use SJS\Flow\MCP\FeatureSet\AbstractFeatureSet;
+use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Tool;
 use SJS\Flow\MCP\JsonSchema\SchemaFactory;
 
@@ -36,14 +36,14 @@ class OptionDefinedTool extends Tool
     /**
      * @param array<string,mixed> $input
      */
-    public function run(\Neos\Flow\Mvc\ActionRequest $actionRequest, array $input): Tool\Content
+    public function run(ServerContext $serverContext, array $input): Tool\Content
     {
         $instance = $this->objectManager->get($this->implementation);
 
         $method = $this->method;
 
         /** @var null|string|array<string,mixed> */
-        $result = $instance->$method($actionRequest, $input);
+        $result = $instance->$method($serverContext, $input);
 
         if (\is_array($result)) {
             return Tool\Content::structuredWithFallback($result);

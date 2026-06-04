@@ -1,2 +1,1 @@
-SJS\Flow\MCP\Domain\Provider\ConnectionProviderInterface:
-  className: 'SJS\Flow\MCP\Domain\Provider\ConfigurationConnectionProvider'
+# ConnectionProviderInterface implementations are bound by consumer packages (e.g. SJS.Neos.MCP)

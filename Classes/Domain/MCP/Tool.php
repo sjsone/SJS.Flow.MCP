@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SJS\Flow\MCP\Domain\MCP;
 
-use Neos\Flow\Mvc\ActionRequest;
+use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Tool\Annotations;
 use SJS\Flow\MCP\JsonSchema\AbstractSchema;
 use SJS\Flow\MCP\Domain\MCP\Tool\Content as ToolContent;
@@ -13,13 +13,10 @@ abstract class Tool implements \JsonSerializable
 {
     public ?string $prefix = null;
 
-    // TODO: use get hook instead of method
     public function nameWithPrefix(): string
     {
         return ($this->prefix !== null ? "{$this->prefix}_" : "") . $this->name;
     }
-
-    // TODO: improve DX for create new Tools because using parent::__construct is a bit awkward
 
     public function __construct(
         public readonly string $name,
@@ -42,7 +39,7 @@ abstract class Tool implements \JsonSerializable
     /**
      * @param array<string,mixed> $input
      */
-    abstract public function run(ActionRequest $actionRequest, array $input): ToolContent;
+    abstract public function run(ServerContext $serverContext, array $input): ToolContent;
 
     public function jsonSerialize(): mixed
     {

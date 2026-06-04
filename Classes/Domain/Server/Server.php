@@ -6,10 +6,10 @@ namespace SJS\Flow\MCP\Domain\Server;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\Utility\LogEnvironment;
-use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Psr\Log\LoggerInterface;
 use SJS\Flow\MCP\Domain\Client\Request;
+use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Completion;
 use SJS\Flow\MCP\Domain\Server\Method;
 use SJS\Flow\MCP\Domain\Server\Server\Configuration;
@@ -29,7 +29,7 @@ class Server
     public function __construct(
         public readonly string $name,
         public readonly Configuration $configuration,
-        public readonly ActionRequest $request,
+        public readonly ServerContext $serverContext,
         protected ObjectManager $objectManager,
         protected LoggerInterface $logger,
     ) {
@@ -41,13 +41,11 @@ class Server
         $featureSetsConfiguration = $this->configuration->featureSets;
 
         foreach ($featureSetsConfiguration as $featureSetConfiguration) {
-            // TODO: create FeatureSetFactory(+interface) which does all this configuration-to-instance stuff
             $featureSet = $this->objectManager->get($featureSetConfiguration->implementation);
             if (!($featureSet instanceof FeatureSetInterface)) {
-                // TODO: implement logging / warning / error
                 continue;
             }
-            $featureSet->setActionRequest($this->request);
+            $featureSet->setServerContext($this->serverContext);
             $featureSet->setOptions($featureSetConfiguration->options);
             $featureSet->initialize();
             $this->featureSets[$featureSetConfiguration->name] = $featureSet;
@@ -67,7 +65,7 @@ class Server
     protected function getRpcRequest(): JsonRPC\Request
     {
         /** @var array<string,mixed> */
-        $rpcRequestData = $this->request->getArguments();
+        $rpcRequestData = $this->serverContext->request->getArguments();
 
         $rpcRequestJson = json_encode($rpcRequestData, JSON_PRETTY_PRINT);
         $this->logger->debug("Request: {$rpcRequestJson}", LogEnvironment::fromMethodName(__METHOD__));
@@ -194,7 +192,6 @@ class Server
 
     protected function handleNotification(): string
     {
-        // TODO: handle notifications
         return "";
     }
 }

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SJS\Flow\MCP\Domain\Identity;
+namespace SJS\Flow\MCP\Domain\Connection;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Security\Account;
 
 #[Flow\Proxy(false)]
-class Identity
+class Connection
 {
     public function __construct(
         public readonly string $connectionName,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SJS\Flow\MCP\Domain\Identity;
+namespace SJS\Flow\MCP\Domain\Connection;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
@@ -11,7 +11,7 @@ use Neos\Flow\Mvc\ActionRequest;
 class ServerContext
 {
     public function __construct(
-        public readonly ?Identity $identity,
+        public readonly ?Connection $connection,
         public readonly ActionRequest $request,
     ) {
     }

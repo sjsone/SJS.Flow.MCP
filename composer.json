@@ -5,7 +5,6 @@
     "license": "AGPL-3.0-or-later",
     "require": {
         "neos/flow": "^8.0 || ^9.0",
-        "neos/party": "*",
         "guzzlehttp/guzzle": "^7.0"
     },
     "autoload": {
