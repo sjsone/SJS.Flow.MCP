@@ -1,2 +1,2 @@
-SJS\Flow\MCP\Domain\Provider\AgentProviderInterface:
-  className: 'SJS\Flow\MCP\Domain\Provider\ConfigurationAgentProvider'
+SJS\Flow\MCP\Domain\Provider\ConnectionProviderInterface:
+  className: 'SJS\Flow\MCP\Domain\Provider\ConfigurationConnectionProvider'

@@ -12,16 +12,10 @@ use Neos\Flow\Security\Authentication\Token\AbstractToken;
 use Neos\Flow\Security\Authentication\TokenInterface;
 use Neos\Flow\Security\Exception\InvalidAuthenticationStatusException;
 use Neos\Flow\Security\RequestPatternInterface;
+use SJS\Flow\MCP\Domain\Server\ServerFactory;
 
 class MCPToken extends AbstractToken implements TokenInterface
 {
-
-    /**
-     * @var array{bearer: string}
-     */
-    #[Flow\Transient]
-    protected $credentials = ['bearer' => ''];
-
     public function updateCredentials(ActionRequest $actionRequest)
     {
         $this->setAuthenticationStatus(self::AUTHENTICATION_NEEDED);
@@ -35,7 +29,11 @@ class MCPToken extends AbstractToken implements TokenInterface
 
         foreach ($httpRequest->getHeader('Authorization') as $authorizationHeader) {
             if (strpos($authorizationHeader, 'Bearer ') === 0) {
-                $this->credentials['bearer'] = substr($authorizationHeader, strlen('Bearer '));
+                $this->credentials['bearer'] = substr($authorizationHeader, \strlen('Bearer '));
+
+                $serverName = ServerFactory::extractServerNameFromActionRequest($actionRequest);
+                $this->credentials['serverName'] = $serverName;
+
                 $this->setAuthenticationStatus(TokenInterface::AUTHENTICATION_NEEDED);
                 return;
             }

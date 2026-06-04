@@ -7,7 +7,7 @@ namespace SJS\Flow\MCP\Domain\Model;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Security\Account;
 
-class Agent
+class Connection
 {
     protected function __construct(
         public readonly string $name,
@@ -22,7 +22,7 @@ class Agent
         Account $account,
         string $token
     ): self {
-        return new Agent(
+        return new Connection(
             $name,
             $account,
             $token

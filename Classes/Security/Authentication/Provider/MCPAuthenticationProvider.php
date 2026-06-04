@@ -8,8 +8,8 @@ use Neos\Flow\Security\Account;
 use Neos\Flow\Security\Authentication\AuthenticationProviderInterface;
 use Neos\Flow\Security\Authentication\Provider\AbstractProvider;
 use Neos\Flow\Security\Authentication\TokenInterface;
-use SJS\Flow\MCP\Domain\Model\Agent;
-use SJS\Flow\MCP\Domain\Provider\AgentProviderInterface;
+use SJS\Flow\MCP\Domain\Model\Connection;
+use SJS\Flow\MCP\Domain\Provider\ConnectionProviderInterface;
 use SJS\Flow\MCP\Security\Authentication\Token\MCPToken;
 use Neos\Flow\Annotations as Flow;
 
@@ -18,7 +18,7 @@ class MCPAuthenticationProvider extends AbstractProvider implements Authenticati
 {
 
     #[Flow\Inject]
-    protected AgentProviderInterface $agentProvider;
+    protected ConnectionProviderInterface $connectionProvider;
 
 
     /**
@@ -38,18 +38,24 @@ class MCPAuthenticationProvider extends AbstractProvider implements Authenticati
         }
 
         $token = $credentials["bearer"] ?? null;
-        if ($token === null || !is_string($token)) {
+        if ($token === null || !\is_string($token)) {
             $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
             return;
         }
 
-        $agent = $this->agentProvider->getAgentByToken($token);
-        if ($agent === null) {
+        $serverName = $credentials["serverName"] ?? null;
+        if ($serverName === null || !\is_string($serverName)) {
             $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
             return;
         }
 
-        $account = $this->getAccountFromAgent($agent);
+        $connection = $this->connectionProvider->getConnectionByTokenAndServerName($token, $serverName);
+        if ($connection === null) {
+            $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
+            return;
+        }
+
+        $account = $this->getAccountFromConnection($connection);
         if ($account === null) {
             $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
             return;
@@ -60,9 +66,9 @@ class MCPAuthenticationProvider extends AbstractProvider implements Authenticati
         $authenticationToken->setAuthenticationStatus(TokenInterface::AUTHENTICATION_SUCCESSFUL);
     }
 
-    protected function getAccountFromAgent(Agent $agent): ?Account
+    protected function getAccountFromConnection(Connection $connection): ?Account
     {
-        $account = $agent->account;
+        $account = $connection->account;
         return $account;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SJS\Flow\MCP\Controller;
 
 use Neos\Flow\Mvc\Controller\ActionController;
+use Neos\Flow\Mvc\Exception\NoSuchArgumentException;
 use SJS\Flow\MCP\Domain\Server\Server;
 use SJS\Flow\MCP\Domain\Server\ServerFactory;
 use Neos\Flow\Annotations as Flow;
@@ -41,8 +42,7 @@ class MCPController extends ActionController
 
     protected function buildServerFromRequest(): ?Server
     {
-        return $this->serverFactory->buildFromName(
-            'mcp',
+        return $this->serverFactory->buildFromActionRequest(
             $this->request
         );
     }

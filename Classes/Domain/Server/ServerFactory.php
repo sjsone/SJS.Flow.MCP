@@ -25,8 +25,14 @@ class ServerFactory
     #[Flow\Inject]
     protected LoggerInterface $logger;
 
-    public function buildFromName(string $name, ActionRequest $actionRequest): ?Server
+    public function buildFromActionRequest(ActionRequest $actionRequest): ?Server
     {
+        $name = $this->extractServerNameFromActionRequest($actionRequest);
+
+        if (!\array_key_exists($name, $this->configuration)) {
+            throw new \InvalidArgumentException("provided server does not exist");
+        }
+
         return new Server(
             $name,
             Server\Configuration::fromArray($this->configuration[$name]),
@@ -34,5 +40,25 @@ class ServerFactory
             $this->objectManager,
             $this->logger
         );
+    }
+
+    public static function extractServerNameFromActionRequest(ActionRequest $actionRequest): string
+    {
+        try {
+            $serverName = $actionRequest->getArgument("serverName");
+        } catch (NoSuchArgumentException) {
+            throw new \Exception("missing server name");
+        }
+
+        if (\is_array($serverName)) {
+            throw new \Exception("server name must not be an array");
+        }
+
+        $serverName = trim($serverName);
+        if ($serverName === "") {
+            throw new \Exception("server name must not be empty");
+        }
+
+        return $serverName;
     }
 }
