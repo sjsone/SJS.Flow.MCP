@@ -1,1 +1,8 @@
-# ConnectionProviderInterface implementations are bound by consumer packages (e.g. SJS.Neos.MCP)
+"SJS.Flow.MCP:MCPLogger":
+  className: Psr\Log\LoggerInterface
+  scope: singleton
+  factoryObjectName: Neos\Flow\Log\PsrLoggerFactoryInterface
+  factoryMethodName: get
+  arguments:
+    1:
+      value: mcpLogger

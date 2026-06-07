@@ -1,0 +1,10 @@
+Neos:
+  Flow:
+    log:
+      psr3:
+        'Neos\Flow\Log\PsrLoggerFactory':
+          mcpLogger:
+            default:
+              options:
+                logFileURL: "%FLOW_PATH_DATA%Logs/MCP_Development.log"
+                severityThreshold: "%LOG_DEBUG%"

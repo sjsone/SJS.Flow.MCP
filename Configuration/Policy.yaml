@@ -1,10 +1,10 @@
 privilegeTargets:
   'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
-    "SJS.Flow.MCP:Everything":
-      matcher: 'method(SJS\Flow\MCP\Controller\MCPController->.*Action())'
+    "SJS.Flow.MCP:MCPEntryPoint":
+      matcher: 'method(SJS\Flow\MCP\Controller\MCPController->mcpAction())'
 
 roles:
   "Neos.Flow:Everybody":
     privileges:
-      - privilegeTarget: "SJS.Flow.MCP:Everything"
+      - privilegeTarget: "SJS.Flow.MCP:MCPEntryPoint"
         permission: GRANT

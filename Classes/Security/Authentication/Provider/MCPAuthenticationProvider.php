@@ -54,11 +54,6 @@ class MCPAuthenticationProvider extends AbstractProvider implements Authenticati
         }
 
         $account = $connection->account;
-        if ($account === null) {
-            $authenticationToken->setAuthenticationStatus(TokenInterface::WRONG_CREDENTIALS);
-            return;
-        }
-
         $authenticationToken->setAccount($account);
 
         $authenticationToken->setAuthenticationStatus(TokenInterface::AUTHENTICATION_SUCCESSFUL);

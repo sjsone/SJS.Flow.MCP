@@ -8,7 +8,9 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\Mvc\Exception\NoSuchArgumentException;
 use Neos\Flow\ObjectManagement\ObjectManager;
+use Neos\Flow\Security\Account;
 use Psr\Log\LoggerInterface;
+use SJS\Flow\MCP\Domain\Connection\Connection;
 use SJS\Flow\MCP\Domain\Connection\ConnectionProviderInterface;
 use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\Server\Server;
@@ -28,8 +30,23 @@ class ServerFactory
     #[Flow\Inject]
     protected ConnectionProviderInterface $connectionProvider;
 
-    #[Flow\Inject]
-    protected LoggerInterface $logger;
+    #[Flow\Inject(name: "SJS.Flow.MCP:MCPLogger", lazy: false)]
+    protected LoggerInterface $mcpLogger;
+
+    public function buildEmpty(ActionRequest $actionRequest): Server
+    {
+        $connection = new Connection("", new Account(), "");
+        $serverContext = new ServerContext(connection: $connection, request: $actionRequest);
+        $configuration = new Server\Configuration([], []);
+
+        return new Server(
+            "empty",
+            $configuration,
+            $serverContext,
+            $this->objectManager,
+            $this->mcpLogger
+        );
+    }
 
     public function buildFromActionRequest(ActionRequest $actionRequest): ?Server
     {
@@ -50,7 +67,7 @@ class ServerFactory
             Server\Configuration::fromArray($this->configuration[$name]),
             $serverContext,
             $this->objectManager,
-            $this->logger
+            $this->mcpLogger
         );
     }
 

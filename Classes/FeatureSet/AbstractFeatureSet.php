@@ -21,7 +21,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     #[Flow\Inject(lazy: false)]
     protected ObjectManager $objectManager;
 
-    #[Flow\Inject]
+    #[Flow\Inject(name: "SJS.Flow.MCP:MCPLogger", lazy: false)]
     protected LoggerInterface $logger;
 
     protected ServerContext $serverContext;
@@ -36,12 +36,12 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     protected array $options = [];
 
     /**
-     * @var array<\SJS\Flow\MCP\Domain\MCP\Tool>
+     * @var array<Tool>
      */
     protected array $tools = [];
 
     /**
-     * @param class-string<\SJS\Flow\MCP\Domain\MCP\Tool> $tool
+     * @param class-string<Tool> $tool
      */
     public function addTool(string $tool): void
     {
@@ -50,7 +50,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
             throw new \Exception("Provided Tool Class '{$tool}' is not an instance of Tool");
         }
 
-        $this->logger->info("Added Tool: " . $toolInstance->name);
+        $this->logger->debug("Added Tool: {$toolInstance->name}");
 
         $toolInstance->prefix = $this->generateToolCallPrefix();
 
@@ -181,7 +181,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
                 throw new \Exception("Could not generate tool call prefix.\nUnable to split featureSetName.");
             }
             $featureSetNameParts = array_filter($featureSetNameParts, fn($p) => !empty($p));
-            $featureSetNameParts = array_map(fn($p) => strtolower($p), $featureSetNameParts);
+            $featureSetNameParts = array_map("strtolower", $featureSetNameParts);
 
             $this->toolCallPrefix = implode("_", $featureSetNameParts);
         }
