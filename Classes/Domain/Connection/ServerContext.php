@@ -11,7 +11,7 @@ use Neos\Flow\Mvc\ActionRequest;
 class ServerContext
 {
     public function __construct(
-        public readonly ?Connection $connection,
+        public readonly Connection $connection,
         public readonly ActionRequest $request,
     ) {
     }

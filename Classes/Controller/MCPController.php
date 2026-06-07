@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SJS\Flow\MCP\Controller;
 
 use Neos\Flow\Mvc\Controller\ActionController;
-use Neos\Flow\Mvc\Exception\NoSuchArgumentException;
+use GuzzleHttp\Psr7\Response;
 use Neos\Flow\Security\Context;
 use Psr\Log\LoggerInterface;
 use SJS\Flow\MCP\Domain\Server\Server;
@@ -34,31 +34,25 @@ class MCPController extends ActionController
     /**
      * @Flow\SkipCsrfProtection
      */
-    public function mcpAction(): string
+    public function mcpAction(): Response
     {
-        $this->response->setHttpHeader("Content-Type", "application/json");
-
         $this->mcpLogger->info(\sprintf("account: %s\n", $this->securityContext->getAccount()?->getAccountIdentifier() ?? "none!"));
 
         $server = $this->buildServerFromRequest();
         if ($server === null) {
-            throw new \Exception("Could not build server from request");
+            return (new Response(status: 401, body: "{}"))
+                ->withAddedHeader("Content-Type", "application/json");
         }
 
         $this->mcpLogger->info(\sprintf("Built server: %s\n", $server->name));
 
-        $response = $server->handleRequest();
-
-        return $response;
+        $responseBody = $server->handleRequest();
+        return (new Response(status: 200, body: $responseBody))
+            ->withAddedHeader("Content-Type", "application/json");
     }
 
     protected function buildServerFromRequest(): ?Server
     {
-        if ($this->securityContext->getAccount() === null) {
-            $this->mcpLogger->warning("Creating empty server due to missing account");
-            return $this->serverFactory->buildEmpty($this->request);
-        }
-
         return $this->serverFactory->buildFromActionRequest(
             $this->request
         );

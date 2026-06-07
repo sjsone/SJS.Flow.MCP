@@ -60,6 +60,11 @@ class ServerFactory
             $this->extractTokenFromActionRequest($actionRequest),
             $name
         );
+
+        if ($connection === null) {
+            return null;
+        }
+
         $serverContext = new ServerContext(connection: $connection, request: $actionRequest);
 
         return new Server(
