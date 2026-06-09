@@ -40,8 +40,8 @@ class MCPController extends ActionController
 
         $server = $this->buildServerFromRequest();
         if ($server === null) {
-            return (new Response(status: 401, body: "{}"))
-                ->withAddedHeader("Content-Type", "application/json");
+            return (new Response(status: 401, body: "Authorization missing"))
+                ->withAddedHeader("Content-Type", "text/html");
         }
 
         $this->mcpLogger->info(\sprintf("Built server: %s\n", $server->name));
