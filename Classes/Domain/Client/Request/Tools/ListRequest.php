@@ -32,7 +32,7 @@ class ListRequest
 
         $cursor = $params['cursor'] ?? null;
         if ($cursor !== null && !\is_string($cursor)) {
-            throw new \InvalidArgumentException("request param 'cursor' must be string, was: " . gettype($cursor));
+            throw new \InvalidArgumentException("request param 'cursor' must be string, was: " . \gettype($cursor));
         }
 
         return new self(

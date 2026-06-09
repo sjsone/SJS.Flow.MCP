@@ -88,7 +88,7 @@ class ServerFactory
             throw new \Exception("server name must not be an array");
         }
 
-        $serverName = trim($serverName);
+        $serverName = \trim($serverName);
         if ($serverName === "") {
             throw new \Exception("server name must not be empty");
         }
@@ -104,8 +104,8 @@ class ServerFactory
             return '';
         }
         $authHeader = $authHeader[0];
-        if (str_starts_with($authHeader, 'Bearer ')) {
-            return substr($authHeader, 7);
+        if (\str_starts_with($authHeader, 'Bearer ')) {
+            return \substr($authHeader, 7);
         }
         return '';
     }

@@ -139,7 +139,7 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     protected function validatedArgumentsForTool(Tool $tool, array $arguments): void
     {
         if ($tool->inputSchema instanceof ObjectSchema) {
-            $requiredKeys = array_keys($tool->inputSchema->getRequiredProperties());
+            $requiredKeys = \array_keys($tool->inputSchema->getRequiredProperties());
             foreach ($requiredKeys as $requiredKey) {
                 if (!\array_key_exists($requiredKey, $arguments)) {
                     throw new \InvalidArgumentException("Missing required argument: '$requiredKey'");
@@ -172,18 +172,18 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         }
 
         if ($this->toolCallPrefix === null) {
-            $fqcnParts = explode("\\", \get_class($this));
+            $fqcnParts = \explode("\\", \get_class($this));
 
-            $featureSetName = str_replace("FeatureSet", "", end($fqcnParts));
+            $featureSetName = \str_replace("FeatureSet", "", end($fqcnParts));
 
             $featureSetNameParts = preg_split('/(?=[A-Z])/', $featureSetName);
             if ($featureSetNameParts === false) {
                 throw new \Exception("Could not generate tool call prefix.\nUnable to split featureSetName.");
             }
-            $featureSetNameParts = array_filter($featureSetNameParts, fn($p) => !empty($p));
-            $featureSetNameParts = array_map("strtolower", $featureSetNameParts);
+            $featureSetNameParts = \array_filter($featureSetNameParts, fn($p) => !empty($p));
+            $featureSetNameParts = \array_map("strtolower", $featureSetNameParts);
 
-            $this->toolCallPrefix = implode("_", $featureSetNameParts);
+            $this->toolCallPrefix = \implode("_", $featureSetNameParts);
         }
 
         return $this->toolCallPrefix;

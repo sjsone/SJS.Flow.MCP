@@ -38,7 +38,7 @@ class Content implements \JsonSerializable
      */
     public static function structuredWithFallback(array $structuredContent): self
     {
-        $fallbackJson = json_encode($structuredContent);
+        $fallbackJson = \json_encode($structuredContent);
         if ($fallbackJson === false) {
             throw new \InvalidArgumentException("structured content must be encodable to JSON");
         }

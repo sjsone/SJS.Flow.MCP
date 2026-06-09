@@ -25,7 +25,7 @@ class Result implements \JsonSerializable
     public function jsonSerialize(): array
     {
         $data = [
-            'tools' => array_values($this->tools)
+            'tools' => \array_values($this->tools)
         ];
 
         if ($this->nextCursor) {

@@ -65,7 +65,7 @@ class OptionDefinedTool extends Tool
         if (!\is_string($callback)) {
             throw new \InvalidArgumentException("Tool '$name' callback must be a string");
         }
-        [$implementation, $method] = explode("::", $callback, 2);
+        [$implementation, $method] = \explode("::", $callback, 2);
 
         $description = $data["description"] ?? "";
         if (!\is_string($description)) {

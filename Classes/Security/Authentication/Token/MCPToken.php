@@ -29,7 +29,7 @@ class MCPToken extends AbstractToken implements TokenInterface
 
         foreach ($httpRequest->getHeader('Authorization') as $authorizationHeader) {
             if (strpos($authorizationHeader, 'Bearer ') === 0) {
-                $this->credentials['bearer'] = substr($authorizationHeader, \strlen('Bearer '));
+                $this->credentials['bearer'] = \substr($authorizationHeader, \strlen('Bearer '));
 
                 $serverName = ServerFactory::extractServerNameFromActionRequest($actionRequest);
                 $this->credentials['serverName'] = $serverName;

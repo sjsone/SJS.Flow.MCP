@@ -38,7 +38,7 @@ class FeatureSet
         if (!\is_string($implementation)) {
             throw new \InvalidArgumentException("FeatureSet $name implementation must be a string");
         }
-        if (!class_exists($implementation)) {
+        if (!\class_exists($implementation)) {
             throw new \InvalidArgumentException("FeatureSet $name implementation has to be an existing class.\n'$implementation' does not exist");
         }
         if (!\is_array($options)) {

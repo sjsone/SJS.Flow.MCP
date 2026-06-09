@@ -39,7 +39,7 @@ class Response
 
     public function result(\JsonSerializable $data): string
     {
-        $result = json_encode([
+        $result = \json_encode([
             "jsonrpc" => "2.0",
             "id" => $this->id,
             "result" => $data
@@ -54,7 +54,7 @@ class Response
 
     public function error(string $message, ErrorCode $code): string
     {
-        $error = json_encode([
+        $error = \json_encode([
             "jsonrpc" => "2.0",
             "id" => $this->id,
             "error" => [

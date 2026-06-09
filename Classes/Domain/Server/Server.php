@@ -67,7 +67,7 @@ class Server
         /** @var array<string,mixed> */
         $rpcRequestData = $this->serverContext->request->getArguments();
 
-        $rpcRequestJson = json_encode($rpcRequestData, JSON_PRETTY_PRINT);
+        $rpcRequestJson = \json_encode($rpcRequestData, JSON_PRETTY_PRINT);
         $this->logger->debug("Request: {$rpcRequestJson}", LogEnvironment::fromMethodName(__METHOD__));
 
         return JsonRPC\Request::fromArray($rpcRequestData);
