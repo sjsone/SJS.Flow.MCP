@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+namespace SJS\Flow\MCP\Domain\MCP;
+
+use SJS\Flow\MCP\FeatureSet\FeatureSetInterface;
+
+/**
+ * @phpstan-stub
+ *
+ * At runtime this is a marker interface (no methods) to avoid Flow proxy
+ * issues. This stub restores PHPStan's awareness of the constructor contract.
+ */
+interface ToolConstructor
+{
+    public function __construct(FeatureSetInterface $featureSet);
+}

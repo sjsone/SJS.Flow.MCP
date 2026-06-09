@@ -12,13 +12,12 @@ use SJS\Flow\MCP\Transport\JsonRPC\Response;
 #[Flow\Proxy(false)]
 class InitializeMethod
 {
-    public static function handle(InitializeRequest $initializeRequest): string
+    /**
+     * @param array<string,mixed> $authConfig
+     */
+    public static function handle(InitializeRequest $initializeRequest, string $serverName, array $authConfig = []): string
     {
-
         $response = new Response($initializeRequest->id);
-
-
-
-        return $response->result(new Result());
+        return $response->result(new Result($serverName, $authConfig));
     }
 }

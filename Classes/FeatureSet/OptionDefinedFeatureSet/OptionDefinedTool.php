@@ -8,6 +8,7 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Tool;
+use SJS\Flow\MCP\FeatureSet\FeatureSetInterface;
 use SJS\Flow\MCP\JsonSchema\SchemaFactory;
 
 class OptionDefinedTool extends Tool
@@ -16,6 +17,7 @@ class OptionDefinedTool extends Tool
     protected ObjectManager $objectManager;
 
     public function __construct(
+        FeatureSetInterface $featureSet,
         protected readonly string $implementation,
         protected readonly string $method,
         string $name,
@@ -29,7 +31,8 @@ class OptionDefinedTool extends Tool
             description: $description,
             inputSchema: $inputSchema,
             outputSchema: $outputSchema,
-            annotations: $annotations
+            annotations: $annotations,
+            featureSet: $featureSet,
         );
     }
 
@@ -59,7 +62,7 @@ class OptionDefinedTool extends Tool
     /**
      * @param array<string, mixed> $data
      */
-    public static function fromArray(string $name, array $data): self
+    public static function fromArray(string $name, array $data, FeatureSetInterface $featureSet): self
     {
         $callback = $data["callback"] ?? null;
         if (!\is_string($callback)) {
@@ -85,13 +88,14 @@ class OptionDefinedTool extends Tool
         /** @var array<string, mixed>|null $outputSchema */
 
         return new self(
-            $implementation,
-            $method,
-            $name,
-            $description,
-            SchemaFactory::buildFromArray($inputSchema),
-            $outputSchema !== null ? SchemaFactory::buildFromArray($outputSchema) : null,
-            null,
+            featureSet: $featureSet,
+            implementation: $implementation,
+            method: $method,
+            name: $name,
+            description: $description,
+            inputSchema: SchemaFactory::buildFromArray($inputSchema),
+            outputSchema: $outputSchema !== null ? SchemaFactory::buildFromArray($outputSchema) : null,
+            annotations: null,
         );
     }
 }

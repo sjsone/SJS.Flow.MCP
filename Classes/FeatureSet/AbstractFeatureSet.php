@@ -13,6 +13,7 @@ use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Completion;
 use SJS\Flow\MCP\Domain\MCP\Tool;
 use SJS\Flow\MCP\Domain\MCP\Tool\Content;
+use SJS\Flow\MCP\Domain\MCP\ToolConstructor;
 use SJS\Flow\MCP\JsonSchema\ObjectSchema;
 
 #[Flow\Scope("prototype")]
@@ -43,9 +44,13 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     /**
      * @param class-string<Tool> $tool
      */
-    public function addTool(string $tool): void
+    public function addTool(string $tool): Tool
     {
-        $toolInstance = $this->objectManager->get($tool);
+        if (!is_subclass_of($tool, ToolConstructor::class)) {
+            throw new \Exception("Provided Tool Class '{$tool}' is not an instance of ToolConstructor");
+        }
+
+        $toolInstance = $this->objectManager->get($tool, $this);
         if (!($toolInstance instanceof Tool)) {
             throw new \Exception("Provided Tool Class '{$tool}' is not an instance of Tool");
         }
@@ -55,6 +60,8 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
         $toolInstance->prefix = $this->generateToolCallPrefix();
 
         $this->tools[$toolInstance->nameWithPrefix()] = $toolInstance;
+
+        return $toolInstance;
     }
 
     public function setServerContext(ServerContext $serverContext): void
@@ -68,6 +75,14 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     public function setOptions(array $options): void
     {
         $this->options = $options;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 
     abstract public function initialize(): void;

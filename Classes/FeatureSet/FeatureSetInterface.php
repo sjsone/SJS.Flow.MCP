@@ -20,6 +20,11 @@ interface FeatureSetInterface
      */
     public function setOptions(array $options): void;
 
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array;
+
     public function initialize(): void;
 
     /**

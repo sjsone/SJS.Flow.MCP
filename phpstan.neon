@@ -3,3 +3,5 @@ parameters:
     treatPhpDocTypesAsCertain: false
     paths:
         - Classes
+    stubFiles:
+        - Stubs/ToolConstructor.stub

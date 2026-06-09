@@ -6,6 +6,7 @@ namespace SJS\Flow\MCP\Domain\MCP;
 
 use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Tool\Annotations;
+use SJS\Flow\MCP\FeatureSet\FeatureSetInterface;
 use SJS\Flow\MCP\JsonSchema\AbstractSchema;
 use SJS\Flow\MCP\Domain\MCP\Tool\Content as ToolContent;
 
@@ -24,6 +25,7 @@ abstract class Tool implements \JsonSerializable
         public readonly AbstractSchema $inputSchema,
         public readonly ?AbstractSchema $outputSchema = null,
         public readonly ?Annotations $annotations = null,
+        public readonly ?FeatureSetInterface $featureSet = null,
     ) {
     }
 

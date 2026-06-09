@@ -25,7 +25,7 @@ class OptionDefinedFeatureSet extends AbstractFeatureSet
             }
             /** @var array<string, mixed> $configuration */
 
-            $toolInstance = OptionDefinedTool::fromArray($name, $configuration);
+            $toolInstance = OptionDefinedTool::fromArray($name, $configuration, $this);
             $toolInstance->prefix = $this->generateToolCallPrefix();
 
             $this->tools[$toolInstance->nameWithPrefix()] = $toolInstance;
