@@ -12,7 +12,7 @@ use SJS\Flow\MCP\Transport\JsonRPC\Response;
 #[Flow\Proxy(false)]
 class InitializeMethod
 {
-    public static function handle(InitializeRequest $initializeRequest, string $serverName): string
+    public static function handle(InitializeRequest $initializeRequest): string
     {
         $response = new Response($initializeRequest->id);
         return $response->result(new Result());
