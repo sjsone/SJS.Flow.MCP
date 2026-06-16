@@ -34,21 +34,45 @@ class MCPController extends ActionController
     /**
      * @Flow\SkipCsrfProtection
      */
-    public function mcpAction(): Response
+    public function mcpAction(): Response|string
     {
         $this->mcpLogger->info(\sprintf("account: %s\n", $this->securityContext->getAccount()?->getAccountIdentifier() ?? "none!"));
 
         $server = $this->buildServerFromRequest();
         if ($server === null) {
-            return (new Response(status: 401, body: "Authorization missing"))
-                ->withAddedHeader("Content-Type", "text/html");
+            $responseBody = "Authorization missing";
+            $status = 401;
+            $contentType = "text/html";
+
+            if ($this->isLegacy()) {
+                $this->response->setStatusCode($status);
+                $this->response->setContentType($contentType);
+                return $responseBody;
+            }
+
+            return (new Response(status: $status, body: $body))
+                ->withAddedHeader("Content-Type", $contentType);
         }
 
         $this->mcpLogger->info(\sprintf("Built server: %s\n", $server->name));
 
         $responseBody = $server->handleRequest();
-        return (new Response(status: 200, body: $responseBody))
-            ->withAddedHeader("Content-Type", "application/json");
+        $status = 200;
+        $contentType = "application/json";
+
+        if ($this->isLegacy()) {
+            $this->response->setStatusCode($status);
+            $this->response->setContentType($contentType);
+            return $responseBody;
+        }
+
+        return (new Response(status: $status, body: $responseBody))
+            ->withAddedHeader("Content-Type", $contentType);
+    }
+
+    protected function isLegacy(): bool
+    {
+        return str_starts_with(FLOW_VERSION_BRANCH, '8.');
     }
 
     protected function buildServerFromRequest(): ?Server
