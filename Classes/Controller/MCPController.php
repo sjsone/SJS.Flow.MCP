@@ -14,13 +14,13 @@ use Neos\Flow\Annotations as Flow;
 
 class MCPController extends ActionController
 {
-    #[Flow\Inject()]
+    #[Flow\Inject]
     protected ServerFactory $serverFactory;
 
     #[Flow\Inject(name: "SJS.Flow.MCP:MCPLogger", lazy: false)]
     protected LoggerInterface $mcpLogger;
 
-    #[Flow\Inject()]
+    #[Flow\Inject]
     protected Context $securityContext;
 
     /**
