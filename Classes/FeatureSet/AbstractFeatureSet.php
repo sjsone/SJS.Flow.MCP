@@ -168,14 +168,18 @@ abstract class AbstractFeatureSet implements FeatureSetInterface
     }
 
     /**
-     * Execute a closure and catch Content Repository exceptions, returning their
+     * Execute a closure and catch exceptions, returning their
      * message as a text Content. Use in FeatureSets that wrap CR operations.
      */
     protected function catchCRExceptions(\Closure $fn): Content
     {
         try {
-            return $fn();
-        } catch (\Neos\ContentRepository\Core\SharedModel\Exception $e) {
+            /** @var Content $result */
+            $result = $fn();
+            return $result;
+
+        } catch (\Exception $e) {
+            $this->logger->error('CR operation failed', ['exception' => $e]);
             return Content::text($e->getMessage());
         }
     }
