@@ -87,15 +87,18 @@ class OptionDefinedTool extends Tool
         }
         /** @var array<string, mixed>|null $outputSchema */
 
+        // Positional arguments are required here: Flow rewrites "new self" to "new static"
+        // (Proxy\Compiler::replaceSelfWithStatic), so this instantiates the DI proxy, whose
+        // generated constructor takes no declared parameters and reads func_get_args().
         return new self(
-            featureSet: $featureSet,
-            implementation: $implementation,
-            method: $method,
-            name: $name,
-            description: $description,
-            inputSchema: SchemaFactory::buildFromArray($inputSchema),
-            outputSchema: $outputSchema !== null ? SchemaFactory::buildFromArray($outputSchema) : null,
-            annotations: null,
+            $featureSet,
+            $implementation,
+            $method,
+            $name,
+            $description,
+            SchemaFactory::buildFromArray($inputSchema),
+            $outputSchema !== null ? SchemaFactory::buildFromArray($outputSchema) : null,
+            null,
         );
     }
 }
