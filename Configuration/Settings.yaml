@@ -9,3 +9,6 @@ SJS:
               listChanged: false
               subscribe: false
           featureSets: []
+          # Tool names (including their prefix, e.g. "workspace_delete_workspace") that are hidden
+          # from tools/list and rejected like unknown tools on tools/call.
+          disabledTools: []

@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use SJS\Flow\MCP\Domain\Client\Request;
 use SJS\Flow\MCP\Domain\Connection\ServerContext;
 use SJS\Flow\MCP\Domain\MCP\Completion;
+use SJS\Flow\MCP\Domain\MCP\Tool;
 use SJS\Flow\MCP\Domain\Server\Method;
 use SJS\Flow\MCP\Domain\Server\Server\Configuration;
 use SJS\Flow\MCP\FeatureSet\FeatureSetInterface;
@@ -169,13 +170,16 @@ class Server
         foreach ($this->featureSets as $featureSet) {
             $tools = [...$tools, ...$featureSet->toolsList()];
         }
+        $tools = \array_filter($tools, fn(Tool $tool) => !$this->isToolDisabled($tool->nameWithPrefix()));
 
         return Method\Tools\ListMethod::handle($toolsListRequest, $tools, null);
     }
 
     protected function handleToolsCall(Request\Tools\CallRequest $toolsCallRequest): string
     {
-        foreach ($this->featureSets as $featureSet) {
+        // a disabled tool is indistinguishable from an unknown one
+        $featureSets = $this->isToolDisabled($toolsCallRequest->name) ? [] : $this->featureSets;
+        foreach ($featureSets as $featureSet) {
             if (!$featureSet->hasTool($toolsCallRequest->name)) {
                 continue;
             }
@@ -188,6 +192,11 @@ class Server
 
         $response = new Response($toolsCallRequest->id);
         return $response->error("Unknown tool: {$toolsCallRequest->name}", ErrorCode::INVALID_PARAMS);
+    }
+
+    protected function isToolDisabled(string $toolName): bool
+    {
+        return \in_array($toolName, $this->configuration->disabledTools, true);
     }
 
     protected function handleNotification(): string
