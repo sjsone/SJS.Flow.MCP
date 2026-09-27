@@ -8,18 +8,20 @@ use Neos\Flow\Annotations as Flow;
 use SJS\Flow\MCP\Transport\JsonRPC\Request;
 
 /**
- * @deprecated since MCP 2026-07-28: the initialize/initialized handshake is retired.
- *             Use _meta on each request for protocol version + client identity,
- *             and server/discover for optional capability discovery.
- * @see DiscoverRequest
+ * Request for the server/discover RPC (MCP 2026-07-28).
+ *
+ * Stateless capability discovery. Clients call this to learn about the server's
+ * capabilities, protocol version, and configuration without a prior handshake.
+ *
+ * This is the replacement for the deprecated initialize handshake.
  */
 #[Flow\Proxy(false)]
-class InitializeRequest
+class DiscoverRequest
 {
-    public const Method = "initialize";
+    public const Method = "server/discover";
 
     public function __construct(
-        public readonly int $id
+        public readonly ?int $id,
     ) {
     }
 
@@ -30,8 +32,6 @@ class InitializeRequest
             throw new \InvalidArgumentException("id in request is null");
         }
 
-        return new self(
-            $id
-        );
+        return new self($id);
     }
 }

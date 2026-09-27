@@ -38,6 +38,13 @@ class MCPController extends ActionController
     {
         $this->mcpLogger->info(\sprintf("account: %s\n", $this->securityContext->getAccount()?->getAccountIdentifier() ?? "none!"));
 
+        // Extract header-based routing headers (MCP 2026-07-28, SEP-2243)
+        $mcpMethod = $this->extractHttpHeader('Mcp-Method');
+        $mcpName = $this->extractHttpHeader('Mcp-Name');
+        if ($mcpMethod !== null) {
+            $this->mcpLogger->info(\sprintf("Mcp-Method: %s, Mcp-Name: %s", $mcpMethod, $mcpName ?? 'none'));
+        }
+
         $server = $this->buildServerFromRequest();
         if ($server === null) {
             $responseBody = "Authorization missing";
@@ -50,7 +57,7 @@ class MCPController extends ActionController
                 return $responseBody;
             }
 
-            return (new Response(status: $status, body: $body))
+            return (new Response(status: $status, body: $responseBody))
                 ->withAddedHeader("Content-Type", $contentType);
         }
 
@@ -63,11 +70,34 @@ class MCPController extends ActionController
         if ($this->isLegacy()) {
             $this->response->setStatusCode($status);
             $this->response->setContentType($contentType);
+            // Echo back the Mcp-Method header for Streamable HTTP compliance
+            if ($mcpMethod !== null) {
+                $this->response->setHttpHeader('Mcp-Method', $mcpMethod);
+            }
             return $responseBody;
         }
 
-        return (new Response(status: $status, body: $responseBody))
-            ->withAddedHeader("Content-Type", $contentType);
+        $response = (new Response(status: $status, body: $responseBody))->withAddedHeader("Content-Type", $contentType);
+
+        // Echo back the Mcp-Method header for Streamable HTTP compliance (MCP 2026-07-28)
+        if ($mcpMethod !== null) {
+            $response = $response->withAddedHeader('Mcp-Method', $mcpMethod);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Extract a header value from the incoming HTTP request.
+     */
+    protected function extractHttpHeader(string $name): ?string
+    {
+        $httpRequest = $this->request->getHttpRequest();
+        $values = $httpRequest->getHeader($name);
+        if (empty($values)) {
+            return null;
+        }
+        return $values[0];
     }
 
     protected function isLegacy(): bool

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SJS\Flow\MCP\Transport\JsonRPC;
 
 use Neos\Flow\Annotations as Flow;
+use SJS\Flow\MCP\Transport\JsonRPC\Request\Meta;
 
 #[Flow\Proxy(false)]
 class Request
@@ -12,7 +13,8 @@ class Request
     public function __construct(
         public readonly ?int $id,
         public readonly string $method,
-        public readonly mixed $params = null
+        public readonly mixed $params = null,
+        public readonly ?Meta $meta = null,
     ) {
     }
 
@@ -35,10 +37,16 @@ class Request
 
         $params = $data['params'] ?? null;
 
+        $meta = null;
+        if (isset($data['_meta']) && \is_array($data['_meta'])) {
+            $meta = Meta::fromArray($data['_meta']);
+        }
+
         return new self(
             $id,
             $method,
             $params,
+            $meta,
         );
     }
 

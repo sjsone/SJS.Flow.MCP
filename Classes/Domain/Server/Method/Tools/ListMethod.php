@@ -14,10 +14,17 @@ class ListMethod
 {
     /**
      * @param array<\SJS\Flow\MCP\Domain\MCP\Tool> $tools
+     * @param null|int $ttlMs Time-to-live in milliseconds for cache control (MCP 2026-07-28)
+     * @param null|string $cacheScope Cache scope: "server" or "connection" (MCP 2026-07-28)
      */
-    public static function handle(Tools\ListRequest $toolsListRequest, array $tools, ?string $nextCursor): string
-    {
+    public static function handle(
+        Tools\ListRequest $toolsListRequest,
+        array $tools,
+        ?string $nextCursor,
+        ?int $ttlMs = null,
+        ?string $cacheScope = null,
+    ): string {
         $response = new Response($toolsListRequest->id);
-        return $response->result(new Result($tools, $nextCursor));
+        return $response->result(new Result($tools, $nextCursor, $ttlMs, $cacheScope));
     }
 }

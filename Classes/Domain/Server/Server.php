@@ -77,6 +77,8 @@ class Server
     {
         $response = "";
         $response = match ($rpcRequest->method) {
+            Request\DiscoverRequest::Method => $this->handleDiscover(Request\DiscoverRequest::fromJsonRPCRequest($rpcRequest)),
+            // @deprecated since MCP 2026-07-28: initialize handshake retired — use _meta + server/discover
             Request\InitializeRequest::Method => $this->handleInitialize(Request\InitializeRequest::fromJsonRPCRequest($rpcRequest)),
             Request\Resources\ListRequest::Method => $this->handleResourcesList(Request\Resources\ListRequest::fromJsonRPCRequest($rpcRequest)),
             Request\Resources\Templates\ListRequest::Method => $this->handleResourcesTemplatesList(Request\Resources\Templates\ListRequest::fromJsonRPCRequest($rpcRequest)),
@@ -84,6 +86,7 @@ class Server
             Request\Tools\ListRequest::Method => $this->handleToolsList(Request\Tools\ListRequest::fromJsonRPCRequest($rpcRequest)),
             Request\Tools\CallRequest::Method => $this->handleToolsCall(Request\Tools\CallRequest::fromJsonRPCRequest($rpcRequest)),
             Request\Completion\CompleteRequest::Method => $this->handleCompletionComplete(Request\Completion\CompleteRequest::fromJsonRPCRequest($rpcRequest)),
+            // @deprecated since MCP 2026-07-28: notifications/initialized retired — no replacement needed (stateless protocol)
             Request\Notifications\Initialized::Method => $this->handleNotification(),
             Request\Notifications\CancelledRequest::Method => $this->handleNotification(),
             default => throw new \Exception("Unknown request method: {$rpcRequest->method}")
@@ -107,6 +110,26 @@ class Server
         return $response;
     }
 
+    /**
+     * Handle the server/discover RPC (MCP 2026-07-28).
+     *
+     * Stateless capability discovery — the replacement for the deprecated
+     * initialize handshake. Clients call this to learn server capabilities
+     * without needing a prior session setup.
+     */
+    protected function handleDiscover(Request\DiscoverRequest $discoverRequest): string
+    {
+        return Method\DiscoverMethod::handle($discoverRequest);
+    }
+
+    /**
+     * Handle the initialize RPC.
+     *
+     * @deprecated since MCP 2026-07-28: the initialize/initialized handshake
+     *             is retired. Use _meta on each request + optional
+     *             server/discover instead.
+     * @see handleDiscover()
+     */
     protected function handleInitialize(Request\InitializeRequest $initializeRequest): string
     {
         return Method\InitializeMethod::handle($initializeRequest);
